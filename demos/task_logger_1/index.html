@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro — Task Logger</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --border: #2a2a2a;
+    --accent: #e8ff47;
+    --accent2: #ff6b35;
+    --text: #f0f0f0;
+    --muted: #666;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 4px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+
+  .logo span { color: var(--muted); font-weight: 400; }
+
+  .pat-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .pat-status {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .pat-status.ok { color: var(--green); }
+
+  input[type=text], input[type=password] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type=text]:focus, input[type=password]:focus {
+    border-color: var(--accent);
+  }
+
+  button {
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.78rem;
+    padding: 8px 16px;
+    transition: all 0.15s;
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #0e0e0e;
+    font-weight: 500;
+  }
+
+  .btn-accent:hover { background: #d4e83e; }
+  .btn-accent:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+  .btn-danger {
+    background: transparent;
+    border: 1px solid var(--red);
+    color: var(--red);
+  }
+
+  .btn-danger:hover { background: var(--red); color: #0e0e0e; }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .timer-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .timer-display {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .timer-display::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(232,255,71,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .timer-mode {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .timer-mode.work { color: var(--accent); }
+  .timer-mode.break { color: var(--accent2); }
+
+  .timer-clock {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(4rem, 10vw, 6.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--text);
+    transition: color 0.3s;
+  }
+
+  .timer-clock.running { color: var(--accent); }
+  .timer-clock.break-mode { color: var(--accent2); }
+  .timer-clock.danger { color: var(--red); }
+
+  .timer-task-label {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    max-width: 280px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 1s linear;
+    width: 0%;
+  }
+
+  .progress-fill.break-mode { background: var(--accent2); }
+
+  .task-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .task-input-row input {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+  }
+
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mode-btn {
+    padding: 10px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,0.05); }
+  .mode-btn.break-active { border-color: var(--accent2); color: var(--accent2); background: rgba(255,107,53,0.05); }
+
+  .timer-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .timer-controls button {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .log-panel {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 140px);
+    position: sticky;
+    top: 20px;
+  }
+
+  .log-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .log-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .log-actions { display: flex; gap: 6px; }
+
+  .log-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .log-list::-webkit-scrollbar { width: 4px; }
+  .log-list::-webkit-scrollbar-track { background: transparent; }
+  .log-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .log-empty {
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.8;
+  }
+
+  .task-card {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .task-card.completed { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.03); }
+  .task-card.cancelled { border-color: rgba(248,113,113,0.2); opacity: 0.6; }
+  .task-card.break-card { border-color: rgba(255,107,53,0.2); background: rgba(255,107,53,0.03); }
+
+  .task-card-name {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .task-card-name.done { text-decoration: line-through; color: var(--muted); }
+
+  .task-badge {
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .badge-done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-cancelled { background: rgba(248,113,113,0.15); color: var(--red); }
+  .badge-break { background: rgba(255,107,53,0.15); color: var(--accent2); }
+
+  .task-card-meta {
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .stats-row {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .stat-item { text-align: center; }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-lbl { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    z-index: 200;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+  }
+
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { border-color: var(--green); color: var(--green); }
+  #toast.error { border-color: var(--red); color: var(--red); }
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    width: 400px;
+    max-width: 90vw;
+  }
+
+  .modal h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .modal p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .modal p a { color: var(--accent); text-decoration: none; }
+  .modal p a:hover { text-decoration: underline; }
+
+  .modal input { width: 100%; margin-bottom: 12px; }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  footer {
+    padding: 16px 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    main { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+    .log-panel { position: static; max-height: 400px; }
+    header { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">pomo<span>.log</span></div>
+  <div class="pat-section">
+    <span class="pat-status" id="patStatus">— no token</span>
+    <button class="btn-ghost" onclick="openPatModal()">Set Token</button>
+  </div>
+</header>
+
+<main>
+  <div class="timer-panel">
+    <div class="timer-display">
+      <div class="timer-mode" id="timerMode">idle</div>
+      <div class="timer-clock" id="timerClock">25:00</div>
+      <div class="timer-task-label" id="timerTaskLabel">—</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="task-input-row">
+      <input type="text" id="taskInput" placeholder="what are you working on?" onkeydown="if(event.key==='Enter') startWork()">
+      <button class="btn-accent" onclick="startWork()" id="startBtn">start</button>
+    </div>
+
+    <div class="mode-buttons">
+      <button class="mode-btn" id="workModeBtn" onclick="setDuration(25,'work')">25m work</button>
+      <button class="mode-btn" id="breakModeBtn" onclick="setDuration(5,'break')">5m break</button>
+      <button class="mode-btn" onclick="setDuration(50,'work')">50m deep</button>
+      <button class="mode-btn" onclick="setDuration(10,'break')">10m break</button>
+    </div>
+
+    <div class="timer-controls">
+      <button class="btn-ghost" id="pauseBtn" onclick="pauseResume()" disabled>pause</button>
+      <button class="btn-ghost" id="stopBtn" onclick="stopTimer()" disabled>stop</button>
+    </div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-header">
+      <span class="log-title">session log</span>
+      <div class="log-actions">
+        <button class="btn-ghost" onclick="exportCSV()" title="Export CSV">csv</button>
+        <button class="btn-danger" onclick="clearLog()" title="Clear log">clear</button>
+      </div>
+    </div>
+    <div class="log-list" id="logList">
+      <div class="log-empty">no tasks yet.<br>start a timer to begin logging.</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-val" id="statPomos">0</div>
+        <div class="stat-lbl">pomos done</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="statMins">0m</div>
+        <div class="stat-lbl">focused</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>data synced to github · <span id="lastSync">never</span></span>
+  <span>devanshsrivastava88/march_temp</span>
+</footer>
+
+<div class="modal-overlay" id="patModal">
+  <div class="modal">
+    <h2>GitHub Token</h2>
+    <p>
+      Your tasks are saved to your GitHub repo. You need a fine-grained PAT with <strong>Contents: Read and Write</strong> permission on <strong>march_temp</strong> only.<br><br>
+      <a href="https://github.com/settings/tokens?type=beta" target="_blank">→ Generate fine-grained token here</a>
+    </p>
+    <input type="password" id="patInput" placeholder="github_pat_xxxxxxxxxxxxxxxxxxxx">
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closePatModal()">cancel</button>
+      <button class="btn-accent" onclick="savePat()">save token</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const OWNER = 'DevanshSrivastava88';
+const REPO = 'march_temp';
+const DATA_FILE = 'task_summary.json';
+const BRANCH = 'main';
+
+let pat = localStorage.getItem('gh_pat') || '';
+let tasks = [];
+let idleSeconds = 0;
+let timerInterval = null;
+let timerPaused = false;
+let timerRunning = false;
+let timerDuration = 25 * 60;
+let timerRemaining = 25 * 60;
+let timerMode = 'work';
+let currentTask = '';
+let timerStart = null;
+let fileSha = null;
+
+window.onload = async () => {
+  updatePatStatus();
+  await loadFromGitHub();
+  renderLog();
+};
+
+function openPatModal() {
+  document.getElementById('patInput').value = pat;
+  document.getElementById('patModal').classList.add('open');
+}
+
+function closePatModal() {
+  document.getElementById('patModal').classList.remove('open');
+}
+
+function savePat() {
+  const val = document.getElementById('patInput').value.trim();
+  if (!val) { toast('enter a token', 'error'); return; }
+  pat = val;
+  localStorage.setItem('gh_pat', pat);
+  updatePatStatus();
+  closePatModal();
+  toast('token saved — loading data...', 'success');
+  loadFromGitHub();
+}
+
+function updatePatStatus() {
+  const el = document.getElementById('patStatus');
+  if (pat) {
+    el.textContent = '✓ token set';
+    el.className = 'pat-status ok';
+  } else {
+    el.textContent = '— no token';
+    el.className = 'pat-status';
+  }
+}
+
+async function githubGet(path) {
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if (pat) headers['Authorization'] = `Bearer ${pat}`;
+  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, { headers });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GitHub GET failed: ${res.status}`);
+  return res.json();
+}
+
+async function githubPut(path, content, sha, message) {
+  if (!pat) { toast('set a github token first', 'error'); return false; }
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'Authorization': `Bearer ${pat}`,
+    'Content-Type': 'application/json'
+  };
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+    branch: BRANCH
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: 'PUT', headers, body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `GitHub PUT failed: ${res.status}`);
+  }
+  const data = await res.json();
+  fileSha = data.content.sha;
+  return true;
+}
+
+async function loadFromGitHub() {
+  if (!pat) return;
+  try {
+    const file = await githubGet(DATA_FILE);
+    if (!file) { fileSha = null; return; }
+    fileSha = file.sha;
+    const raw = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\n/g, '')))));
+    if (Array.isArray(raw)) {
+      tasks = raw; idleSeconds = 0;
+    } else {
+      tasks = raw.tasks || [];
+      idleSeconds = raw.idle_seconds || 0;
+    }
+    document.getElementById('lastSync').textContent = 'just now';
+    renderLog();
+  } catch(e) {
+    toast('could not load from github: ' + e.message, 'error');
+  }
+}
+
+async function saveToGitHub() {
+  if (!pat) return;
+  const data = { tasks, idle_seconds: idleSeconds };
+  try {
+    await githubPut(DATA_FILE, data, fileSha, `update task log — ${new Date().toISOString().slice(0,16)}`);
+    document.getElementById('lastSync').textContent = new Date().toLocaleTimeString();
+  } catch(e) {
+    toast('sync failed: ' + e.message, 'error');
+  }
+}
+
+function setDuration(mins, mode) {
+  if (timerRunning) return;
+  timerDuration = mins * 60;
+  timerRemaining = timerDuration;
+  timerMode = mode;
+  updateClockDisplay();
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('timerMode').textContent = mode === 'work' ? `${mins}m focus` : `${mins}m break`;
+  document.getElementById('timerMode').className = `timer-mode ${mode === 'break' ? 'break' : ''}`;
+}
+
+function startWork() {
+  if (timerRunning) return;
+  const taskInput = document.getElementById('taskInput');
+  const name = taskInput.value.trim();
+  if (!name && timerMode === 'work') { taskInput.focus(); toast('name your task first', 'error'); return; }
+  currentTask = name || 'break';
+  timerStart = new Date();
+  timerRunning = true;
+  timerPaused = false;
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('pauseBtn').disabled = false;
+  document.getElementById('stopBtn').disabled = false;
+  document.getElementById('timerTaskLabel').textContent = currentTask;
+  document.getElementById('timerMode').textContent = timerMode === 'work' ? 'focusing' : 'on break';
+  document.getElementById('timerMode').className = `timer-mode ${timerMode === 'break' ? 'break' : 'work'}`;
+  timerInterval = setInterval(tick, 1000);
+}
+
+function tick() {
+  if (timerPaused) return;
+  timerRemaining--;
+  updateClockDisplay();
+  const pct = ((timerDuration - timerRemaining) / timerDuration) * 100;
+  const fill = document.getElementById('progressFill');
+  fill.style.width = pct + '%';
+  fill.className = `progress-fill${timerMode === 'break' ? ' break-mode' : ''}`;
+  const clock = document.getElementById('timerClock');
+  clock.className = `timer-clock running${timerMode === 'break' ? ' break-mode' : ''}${timerRemaining <= 60 ? ' danger' : ''}`;
+  if (timerRemaining <= 0) finishTimer(true);
+}
+
+function updateClockDisplay() {
+  const m = Math.floor(timerRemaining / 60).toString().padStart(2, '0');
+  const s = (timerRemaining % 60).toString().padStart(2, '0');
+  document.getElementById('timerClock').textContent = `${m}:${s}`;
+}
+
+function pauseResume() {
+  if (!timerRunning) return;
+  timerPaused = !timerPaused;
+  document.getElementById('pauseBtn').textContent = timerPaused ? 'resume' : 'pause';
+  document.getElementById('timerMode').textContent = timerPaused ? 'paused' : (timerMode === 'work' ? 'focusing' : 'on break');
+}
+
+function stopTimer() {
+  if (!timerRunning) return;
+  finishTimer(false);
+}
+
+async function finishTimer(completed) {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerPaused = false;
+  const end = new Date();
+  const actual = Math.round((end - timerStart) / 1000);
+  const record = {
+    name: currentTask,
+    start: timerStart.toISOString().replace('T',' ').slice(0,19),
+    end: end.toISOString().replace('T',' ').slice(0,19),
+    planned_seconds: timerDuration,
+    actual_seconds: actual,
+    completed: completed
+  };
+  tasks.push(record);
+  renderLog();
+  await saveToGitHub();
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('pauseBtn').disabled = true;
+  document.getElementById('pauseBtn').textContent = 'pause';
+  document.getElementById('stopBtn').disabled = true;
+  document.getElementById('timerClock').className = 'timer-clock';
+  document.getElementById('timerMode').textContent = completed ? 'done ✓' : 'stopped';
+  document.getElementById('timerMode').className = 'timer-mode';
+  document.getElementById('timerTaskLabel').textContent = '—';
+  timerRemaining = timerDuration;
+  updateClockDisplay();
+  if (completed) {
+    toast(`"${currentTask}" complete!`, 'success');
+    if (Notification.permission === 'granted') {
+      new Notification('Pomodoro done!', { body: `"${currentTask}" finished.` });
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+  } else {
+    toast('timer stopped');
+  }
+}
+
+function renderLog() {
+  const list = document.getElementById('logList');
+  if (!tasks.length) {
+    list.innerHTML = '<div class="log-empty">no tasks yet.<br>start a timer to begin logging.</div>';
+    document.getElementById('statPomos').textContent = '0';
+    document.getElementById('statMins').textContent = '0m';
+    return;
+  }
+  list.innerHTML = [...tasks].reverse().map(t => {
+    const isBreak = t.name === 'break';
+    const done = t.completed;
+    const badge = isBreak ? '<span class="task-badge badge-break">break</span>'
+      : done ? '<span class="task-badge badge-done">done</span>'
+      : '<span class="task-badge badge-cancelled">stopped</span>';
+    const cardClass = isBreak ? 'task-card break-card' : done ? 'task-card completed' : 'task-card cancelled';
+    const nameClass = done && !isBreak ? 'task-card-name done' : 'task-card-name';
+    const mins = Math.round(t.actual_seconds / 60);
+    const timeStr = t.end ? t.end.slice(11,16) : '';
+    return `<div class="${cardClass}"><div class="${nameClass}">${escHtml(t.name)} ${badge}</div><div class="task-card-meta">${mins}m · ${timeStr}</div></div>`;
+  }).join('');
+  const doneTasks = tasks.filter(t => t.completed && t.name !== 'break');
+  const totalMins = Math.round(tasks.filter(t => t.completed).reduce((a, t) => a + t.actual_seconds, 0) / 60);
+  document.getElementById('statPomos').textContent = doneTasks.length;
+  document.getElementById('statMins').textContent = totalMins + 'm';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function clearLog() {
+  if (!tasks.length) { toast('already empty'); return; }
+  if (!confirm('Clear all logged tasks? This will update your GitHub file.')) return;
+  tasks = []; idleSeconds = 0; fileSha = null;
+  renderLog();
+  await saveToGitHub();
+  toast('log cleared', 'success');
+}
+
+function exportCSV() {
+  if (!tasks.length) { toast('no tasks to export'); return; }
+  const rows = ['name,start,end,planned_mins,actual_mins,completed'];
+  tasks.forEach(t => {
+    rows.push([`"${t.name}"`, t.start, t.end, Math.round(t.planned_seconds/60), Math.round(t.actual_seconds/60), t.completed].join(','));
+  });
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `pomodoro_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('csv downloaded', 'success');
+}
+
+let toastTimer;
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = ''; }, 2800);
+}
+
+document.getElementById('patModal').addEventListener('click', function(e) {
+  if (e.target === this) closePatModal();
+});
+</script>
+</body>
+</html>

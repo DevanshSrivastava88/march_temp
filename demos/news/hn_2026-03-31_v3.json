@@ -1,0 +1,88 @@
+{
+  "date": "2026-03-31",
+  "source": "Hacker News",
+  "fetched_at": "2026-03-31T00:00:00Z",
+  "description": "Top 10 AI/tech stories from Hacker News front page on 2026-03-31",
+  "stories": [
+    {
+      "rank": 1,
+      "title": "Kagi Translate now supports LinkedIn Speak as an output language",
+      "url": "https://translate.kagi.com/?from=en&to=LinkedIn+speak",
+      "score": 961,
+      "num_comments": 237,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47408703"
+    },
+    {
+      "rank": 2,
+      "title": "Leanstral: Open-source agent for trustworthy coding and formal proof engineering",
+      "url": "https://mistral.ai/news/leanstral",
+      "score": 632,
+      "num_comments": 141,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47404796"
+    },
+    {
+      "rank": 3,
+      "title": "US SEC preparing to scrap quarterly reporting requirement",
+      "url": "https://www.reuters.com/business/finance/us-sec-preparing-eliminate-quarterly-reporting-requirement-wsj-says-2026-03-16/",
+      "score": 641,
+      "num_comments": 358,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47406779"
+    },
+    {
+      "rank": 4,
+      "title": "Reddit User Uncovers Who Is Behind Meta's $2B Lobbying for Age Verification Tech",
+      "url": "https://www.gadgetreview.com/reddit-user-uncovers-who-is-behind-metas-2b-lobbying-for-invasive-age-verification-tech",
+      "score": 551,
+      "num_comments": 229,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47410870"
+    },
+    {
+      "rank": 5,
+      "title": "The \"small web\" is bigger than you might think",
+      "url": "https://kevinboone.me/small_web_is_big.html",
+      "score": 471,
+      "num_comments": 199,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47401879"
+    },
+    {
+      "rank": 6,
+      "title": "Meta's renewed commitment to jemalloc",
+      "url": "https://engineering.fb.com/2026/03/02/data-infrastructure/investing-in-infrastructure-metas-renewed-commitment-to-jemalloc/",
+      "score": 470,
+      "num_comments": 206,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47402640"
+    },
+    {
+      "rank": 7,
+      "title": "My Journey to a reliable and enjoyable locally hosted voice assistant (2025)",
+      "url": "https://community.home-assistant.io/t/my-journey-to-a-reliable-and-enjoyable-locally-hosted-voice-assistant/944860",
+      "score": 395,
+      "num_comments": 119,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47398534"
+    },
+    {
+      "rank": 8,
+      "title": "Every layer of review makes you 10x slower",
+      "url": "https://apenwarr.ca/log/20260316",
+      "score": 368,
+      "num_comments": 227,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47408205"
+    },
+    {
+      "rank": 9,
+      "title": "Kagi Small Web",
+      "url": "https://kagi.com/smallweb/",
+      "score": 371,
+      "num_comments": 83,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47410542"
+    },
+    {
+      "rank": 10,
+      "title": "Claude Tips for 3D Work",
+      "url": "https://www.davesnider.com/posts/claude-3d",
+      "score": 148,
+      "num_comments": 32,
+      "hn_item_url": "https://news.ycombinator.com/item?id=47365299"
+    }
+  ]
+}

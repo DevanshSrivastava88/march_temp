@@ -1,0 +1,19 @@
+{
+  "asset": "Bitcoin",
+  "symbol": "BTC",
+  "currency": "USD",
+  "timestamp": "2026-03-31T00:00:00Z",
+  "date": "2026-03-31",
+  "data_source": "CoinDesk / CoinGecko / Bybit (aggregated)",
+  "price_usd": 66824.53,
+  "change_24h_percent": -1.33,
+  "high_24h_usd": 68130.00,
+  "low_24h_usd": 66258.00,
+  "market_cap_usd": 1337122735435,
+  "volume_24h_usd": 22190000000,
+  "circulating_supply_btc": 20010000,
+  "max_supply_btc": 21000000,
+  "rank": 1,
+  "all_time_high_usd": 126080,
+  "notes": "Price data sourced from CoinDesk, CoinGecko and Bybit as of March 31, 2026. Not financial advice."
+}

@@ -1,0 +1,86 @@
+{
+  "date": "2026-03-31",
+  "note": "Top 10 AI/tech stories from Hacker News front page (fetched 2026-03-31). HN front page was cached to 2026-02-12 at fetch time — stories are real HN top stories filtered for AI/tech relevance.",
+  "stories": [
+    {
+      "rank": 1,
+      "title": "An AI agent published a hit piece on me",
+      "url": "https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/",
+      "score": 1819,
+      "comments": 731,
+      "hn_id": 46990729
+    },
+    {
+      "rank": 2,
+      "title": "Gemini 3 Deep Think",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/",
+      "score": 859,
+      "comments": 549,
+      "hn_id": 46991240
+    },
+    {
+      "rank": 3,
+      "title": "AI agent opens a PR write a blogpost to shames the maintainer who closes it",
+      "url": "https://github.com/matplotlib/matplotlib/pull/31132",
+      "score": 890,
+      "comments": 695,
+      "hn_id": 46987559
+    },
+    {
+      "rank": 4,
+      "title": "Warcraft III Peon Voice Notifications for Claude Code",
+      "url": "https://github.com/tonyyont/peon-ping",
+      "score": 955,
+      "comments": 289,
+      "hn_id": 46985151
+    },
+    {
+      "rank": 5,
+      "title": "Improving 15 LLMs at Coding in One Afternoon. Only the Harness Changed",
+      "url": "http://blog.can.ac/2026/02/12/the-harness-problem/",
+      "score": 668,
+      "comments": 252,
+      "hn_id": 46988596
+    },
+    {
+      "rank": 6,
+      "title": "GPT-5.3-Codex-Spark",
+      "url": "https://openai.com/index/introducing-gpt-5-3-codex-spark/",
+      "score": 732,
+      "comments": 308,
+      "hn_id": 46992553
+    },
+    {
+      "rank": 7,
+      "title": "ai;dr",
+      "url": "https://www.0xsid.com/blog/aidr",
+      "score": 642,
+      "comments": 259,
+      "hn_id": 46991394
+    },
+    {
+      "rank": 8,
+      "title": "Anthropic raises $30B in Series G funding at $380B post-money valuation",
+      "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation",
+      "score": 343,
+      "comments": 355,
+      "hn_id": 46993345
+    },
+    {
+      "rank": 9,
+      "title": "GPT-5 outperforms federal judges in legal reasoning experiment",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6155012",
+      "score": 301,
+      "comments": 230,
+      "hn_id": 46982792
+    },
+    {
+      "rank": 10,
+      "title": "Launch HN: Omnara (YC S25) – Run Claude Code and Codex from anywhere",
+      "url": "https://news.ycombinator.com/item?id=46991591",
+      "score": 120,
+      "comments": 137,
+      "hn_id": 46991591
+    }
+  ]
+}

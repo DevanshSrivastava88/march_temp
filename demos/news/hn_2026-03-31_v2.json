@@ -1,0 +1,88 @@
+{
+  "date": "2026-03-31",
+  "source": "Hacker News",
+  "fetched_at": "2026-03-31T00:00:00Z",
+  "description": "Top 10 AI/tech stories from Hacker News on March 31, 2026",
+  "stories": [
+    {
+      "rank": 1,
+      "title": "An AI agent published a hit piece on me",
+      "url": "https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/",
+      "hn_url": "https://news.ycombinator.com/item?id=46990729",
+      "score": 1657,
+      "num_comments": 690
+    },
+    {
+      "rank": 2,
+      "title": "Gemini 3 Deep Think",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/",
+      "hn_url": "https://news.ycombinator.com/item?id=46991240",
+      "score": 777,
+      "num_comments": 497
+    },
+    {
+      "rank": 3,
+      "title": "GPT-5.3-Codex-Spark",
+      "url": "https://openai.com/index/introducing-gpt-5-3-codex-spark/",
+      "hn_url": "https://news.ycombinator.com/item?id=46992553",
+      "score": 655,
+      "num_comments": 266
+    },
+    {
+      "rank": 4,
+      "title": "Improving 15 LLMs at Coding in One Afternoon. Only the Harness Changed",
+      "url": "http://blog.can.ac/2026/02/12/the-harness-problem/",
+      "hn_url": "https://news.ycombinator.com/item?id=46988596",
+      "score": 624,
+      "num_comments": 239
+    },
+    {
+      "rank": 5,
+      "title": "Ring cancels its partnership with Flock Safety after surveillance backlash",
+      "url": "https://www.theverge.com/news/878447/ring-flock-partnership-canceled",
+      "hn_url": "https://news.ycombinator.com/item?id=46996999",
+      "score": 339,
+      "num_comments": 172
+    },
+    {
+      "rank": 6,
+      "title": "Beginning fully autonomous operations with the 6th-generation Waymo driver",
+      "url": "https://waymo.com/blog/2026/02/ro-on-6th-gen-waymo-driver",
+      "hn_url": "https://news.ycombinator.com/item?id=46990578",
+      "score": 190,
+      "num_comments": 186
+    },
+    {
+      "rank": 7,
+      "title": "AWS Adds support for nested virtualization",
+      "url": "https://github.com/aws/aws-sdk-go-v2/commit/3dca5e45d5ad05460b93410087833cbaa624754e",
+      "hn_url": "https://news.ycombinator.com/item?id=46997133",
+      "score": 153,
+      "num_comments": 56
+    },
+    {
+      "rank": 8,
+      "title": "Launch HN: Omnara (YC S25) – Run Claude Code and Codex from anywhere",
+      "url": "https://news.ycombinator.com/item?id=46991591",
+      "hn_url": "https://news.ycombinator.com/item?id=46991591",
+      "score": 110,
+      "num_comments": 132
+    },
+    {
+      "rank": 9,
+      "title": "New Nick Bostrom Paper: Optimal Timing for Superintelligence",
+      "url": "https://nickbostrom.com/optimal.pdf",
+      "hn_url": "https://news.ycombinator.com/item?id=46999117",
+      "score": 28,
+      "num_comments": 12
+    },
+    {
+      "rank": 10,
+      "title": "Evaluating Multilingual, Context-Aware Guardrails: A Humanitarian LLM Use Case",
+      "url": "https://blog.mozilla.ai/evaluating-multilingual-context-aware-guardrails-evidence-from-a-humanitarian-llm-use-case/",
+      "hn_url": "https://news.ycombinator.com/item?id=46996258",
+      "score": 11,
+      "num_comments": 0
+    }
+  ]
+}
